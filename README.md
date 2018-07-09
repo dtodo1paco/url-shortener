@@ -5,7 +5,7 @@
 This is a sample project to test [Spring-boot](https://spring.io/projects/spring-boot) capabilities to serve REST operations and a SPA client made with [React-md](https://react-md.mlaursen.com/) to use them.
 It is based on some popular URL shortener services such as [bitly](https://bitly.com/) or [goo.gl](https://goo.gl/).
 
-![URLShortener](https://github.com/dtodo1paco/url-shortener/images/image_1.png)
+![URLShortener](https://github.com/dtodo1paco/url-shortener/raw/master/images/image_1.png)
 
 ### Features
 

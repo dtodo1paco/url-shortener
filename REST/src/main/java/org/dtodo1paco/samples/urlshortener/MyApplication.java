@@ -14,13 +14,4 @@ public class MyApplication {
 		SpringApplication.run(MyApplication.class, args);
 	}
 
-//	@Override
-//	public void run(String... args) throws Exception {
-//		ServiceUser defaultAdmin = userRepository.findByUserName("dtodo1paco");
-//		if (defaultAdmin == null) {
-//			defaultAdmin = userRepository.save(new ServiceUser("dtodo1paco",
-//				"mi.123456", UserConstants.ROLE_ADMIN, "Paco Alías"));
-//		}
-//		System.out.println("ADMIN " + defaultAdmin);
-//	}
 }

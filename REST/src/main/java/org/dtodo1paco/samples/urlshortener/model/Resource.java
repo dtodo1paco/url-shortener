@@ -28,10 +28,16 @@ public class Resource {
 		this.setSource(source);
 	}
 
+	public void copyFrom(Resource res) {
+		this.setSource(res.getSource());
+		this.setCreated(res.getCreated());
+		this.setOwner(res.getOwner());
+	}
+	
 	@Override
 	public String toString() {
-		return String.format("{%s[source='%s', shortened='%s', owner='%', created='%s']}",
-				getClass(), getSource(), getShortened(), getCreated());
+		return String.format("{%s[source='%s', shortened='%s', owner='%s', created='%s']}",
+				getClass(), getSource(), getShortened(), getOwner(), getCreated());
 	}
 
 	public String getSource() {

@@ -41,17 +41,6 @@ public class URLPublicController {
 	@Autowired
 	private ResourceVisitRepository visitRepo;
 
-	// GET
-	@GetMapping("url/{id}")
-	public ResponseEntity<Resource> get(@PathVariable("source") String source) {
-		String key = source;
-		if (source.startsWith("http")) {
-			key = URLShortenerUtil.doShort(source);
-		}
-		Resource item = resourceRepo.findByShortened(key);
-		return new ResponseEntity<Resource>(item, HttpStatus.OK);
-	}
-
 	// SAVE
 	@PostMapping("url")
 	public ResponseEntity<Resource> add(@RequestBody Resource item,
@@ -101,6 +90,13 @@ public class URLPublicController {
 		}
 	}
 
+	// GET
+	@GetMapping("url/{code}")
+	public ResponseEntity<Resource> get(@PathVariable("code") String code) {
+		String key = code;
+		Resource item = resourceRepo.findByShortened(key);
+		return new ResponseEntity<Resource>(item, HttpStatus.OK);
+	}
 	/**
 	 * Gets remote address of request by headers if present
 	 * @return

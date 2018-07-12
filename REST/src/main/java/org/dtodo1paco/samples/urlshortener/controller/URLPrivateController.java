@@ -31,14 +31,20 @@ public class URLPrivateController {
 	// UPDATE
 	@PutMapping("url")
 	public ResponseEntity<Resource> update(@RequestBody Resource item) {
-		Resource result = repository.save(item);
-		return new ResponseEntity<Resource>(result, HttpStatus.OK);
+		Resource found = repository.findByShortened(item.getShortened());
+		if (found != null) {
+			found.copyFrom(item);
+			Resource result = repository.save(found);
+			return new ResponseEntity<Resource>(result, HttpStatus.OK);
+		} else {
+			return new ResponseEntity<Resource>(HttpStatus.CONFLICT);
+		}
 	}
 	
 	// REMOVE
-	@DeleteMapping("url/{id}")
-	public ResponseEntity<Resource> delete(@PathVariable("id") String id) {
-		Resource item = repository.findByShortened(id);
+	@DeleteMapping("url/{code}")
+	public ResponseEntity<Resource> delete(@PathVariable("code") String code) {
+		Resource item = repository.findByShortened(code);
 		repository.delete(item);
 		return new ResponseEntity<Resource>(item, HttpStatus.OK);
 	}

@@ -16,12 +16,33 @@ URL has many features including:
 - The code (URL shortened) obtained is always the same given the same source URL
 - When a code is requested, the server would redirect your browser to the corresponding source URL
 - Every code request is saved to keep track of shorten URL use
+- Unit/Functional testing for all the services
 
 #### ToDo
 - User registration
 - Every authenticated user has access to visits of its shortened URLs
 - Admin desktop
-- Unit/Functional testing for all the services
+
+### Testing
+To run tests on Client part, you only have to type:
+```
+npm test -- -u
+```
+on CLIENT directory.
+
+When you're done, you can build the production version (with npm run prod) and build the entire application with:
+```
+mvn clean install
+```
+which will run REST tests before build the final jar.
+
+### Upgrading software
+Please, follow these steps to make any modification on the software:
+1 - Code and test manually.
+2 - Upgrade the tests part with all the needed tests for your new features/fixes.
+3 - Run the automated tests.
+4 - Create a PR ;-)
+5 - Document your PR with screenshots and/or code, whatever that supports your description.
 
 ### Issues/Bugs/Suggestions
 Feel free to report any bugs or make suggestions [here](https://github.com/dtodo1paco/url-shortener/issues)
@@ -47,7 +68,7 @@ Make sure you have installed the following tools:
 #### Server side (Java)
 Go to REST directory and execute the following
 ```sh
-mvn clean install && java -jar target/url-shortener-0.0.1-SNAPSHOT.jar 
+mvn clean install && java -jar target/url-shortener-0.0.2-SNAPSHOT.jar 
 ```
 You will see maven compiling sources and creating the JAR you are launching in next command. 
 ```sh

@@ -30050,19 +30050,15 @@
 	            var nClicks = this.state.numClicks + 1;
 	            var loading = false;
 	            var url = this.state.urlValue;
-	            console.log("reading " + JSON.stringify(url));
 	            if (url.length > 0) {
-	                console.log("Shortening " + url);
 	                loading = true;
 	                (0, _urlActions2.default)("url", { source: url }, this.checkResponse);
 	            }
 	            this.setState({ numClicks: nClicks, loading: loading });
-	            console.log("Clicked: " + nClicks);
 	        }
 	    }, {
 	        key: "handleReset",
 	        value: function handleReset(e) {
-	            console.log("Reseting..");
 	            this.setState({
 	                urlValue: '',
 	                loading: false,
@@ -79115,9 +79111,7 @@
 	    var portletUrl = 'http://localhost:8080/' + model;
 	    var objPayload = properties;
 
-	    console.log("Sending to [" + portletUrl + "]: " + JSON.stringify(objPayload));
 	    _axios2.default.post(portletUrl, objPayload).then(function (res) {
-	        console.log("Response: " + JSON.stringify(res));
 	        if (callback) {
 	            callback(res);
 	        }

@@ -10,4 +10,5 @@ package org.dtodo1paco.util;
 public class StringUtil {
 
 	public final static String COLON = ":";
+	public final static String PIPE = "|";
 }

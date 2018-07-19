@@ -1,4 +1,5 @@
 package org.dtodo1paco.samples.urlshortener.controller;
+
 import java.util.List;
 
 import org.dtodo1paco.samples.urlshortener.model.Resource;
@@ -17,10 +18,10 @@ import org.springframework.web.bind.annotation.RequestMapping;
 @Controller
 @RequestMapping("user")
 public class URLPrivateController {
-	
+
 	@Autowired
 	private ResourceRepository repository;
-	
+
 	// GET
 	@GetMapping("urls")
 	public ResponseEntity<List<Resource>> getAll() {
@@ -40,7 +41,7 @@ public class URLPrivateController {
 			return new ResponseEntity<Resource>(HttpStatus.CONFLICT);
 		}
 	}
-	
+
 	// REMOVE
 	@DeleteMapping("url/{code}")
 	public ResponseEntity<Resource> delete(@PathVariable("code") String code) {

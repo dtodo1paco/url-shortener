@@ -60,7 +60,8 @@ public class JwtUtil {
 	 */
 	public static String buildToken(Authentication auth) {
 		Collection<? extends GrantedAuthority> roles = auth.getAuthorities();
-
+		
+/*
 		StringBuilder sb = new StringBuilder();
 		int n = 0;
 		for (GrantedAuthority role : roles) {
@@ -70,6 +71,7 @@ public class JwtUtil {
 				sb.append(StringUtil.PIPE);
 			}
 		}
+		*/
 
 		// TODO: send Roles in token to let the user decide the Role to play
 		String token = Jwts

@@ -78,3 +78,55 @@ footer {
     margin: 8px;
   }
 }
+
+.top-bar-right-links {
+  padding: 1em;
+  a {
+    margin-left: 1em;
+  }
+}
+
+.index-link {
+  margin-top: auto;
+  margin-bottom: auto;
+  margin-left: 0;
+  font-size: larger;
+}
+
+.username {
+  display: block;
+  font-size: xx-small;
+  text-align: end;
+}
+
+
+.isa_info, .isa_success, .isa_warning, .isa_error {
+  margin: 10px 0px;
+  padding:12px;
+
+}
+.message-info {
+  color: #00529B;
+  background-color: #BDE5F8;
+}
+.message-success {
+  color: #4F8A10;
+  background-color: #DFF2BF;
+}
+.message-warning {
+  color: #9F6000;
+  background-color: #FEEFB3;
+}
+.message-error {
+  color: #D8000C;
+  background-color: #FFD2D2;
+}
+.message {
+  margin:10px 22px;
+  vertical-align:middle;
+  padding-left: 2em;
+  padding-right: 2em;
+  text-align: justify;
+  padding-bottom: 1em;
+  padding-top: 1em;
+}

@@ -7,7 +7,7 @@ import CircularProgress from 'react-md/lib/Progress/CircularProgress';
 import Media, { MediaOverlay } from "react-md/lib/Media"
 import Button from "react-md/lib/Buttons"
 import { TextField } from 'react-md';
-import sendToServer from '../actions/urlActions.js';
+import httpClient from 'modules/httpClient';
 
 export default class URLForm extends React.Component {
     constructor() {
@@ -47,7 +47,7 @@ export default class URLForm extends React.Component {
         let url = this.state.urlValue;
         if (url.length > 0) {
             loading = true;
-            sendToServer("url", {source: url}, this.checkResponse);
+            httpClient.postModel("/url", {source: url}, this.checkResponse);
         }
         this.setState ({numClicks: nClicks, loading: loading});
     }

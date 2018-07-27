@@ -1,52 +1,34 @@
 import axios from 'axios'
-import jwtDecode from 'jwt-decode'
 
-const SERVER_URL = "http://localhost:8080";
-
+import { API_ROOT } from "modules/api-config.js";
+import api from "modules/api";
 // instantiate axios
 const httpClient = axios.create()
-
-httpClient.getToken = function() {
-    return localStorage.getItem('token')
-}
-
-httpClient.setToken = function(token) {
-    localStorage.setItem('token', token)
-    return token
-}
-
-httpClient.getCurrentUser = function() {
-    const token = httpClient.getToken()
-    if(token) return jwtDecode(token)
-    return null
-}
 
 httpClient.logIn = function(credentials, callback) {
     let conf = {
         "auth": credentials
     }
-    axios.get(SERVER_URL + "/auth/", conf)
+    axios.get(API_ROOT + "auth/", conf)
         .then((serverResponse) => {
+            //console.log("httpClient.logIn serverResponse: " + JSON.stringify(serverResponse));
             const token = serverResponse.data.Authorization;
-            let ret = serverResponse;
             if (token) {
+                api.setToken(token);
                 // sets token as an included header for all subsequent api requests
-                httpClient.setToken(token)
                 axios.defaults.headers.common['Authorization'] = token;
-                ret = jwtDecode(token)
+                serverResponse.data = api.getCurrentUser();
             }
-            console.log("httpClient.logIn returning: " +ret);
             try {
                 if (callback) {
-                    callback(ret)
+                    callback(serverResponse)
                 }
             } catch (e) {
                 console.log("Ignoring error on callback: " + e);
-                debugger;
             }
         }).catch(
             function (response) {
-                console.log("ERROR when calling server:" + JSON.stringify(response));
+                console.error("ERROR when calling server:" + JSON.stringify(response), response);
                 if (callback) {
                     callback(response)
                 }
@@ -56,32 +38,34 @@ httpClient.logIn = function(credentials, callback) {
 
 
 httpClient.logOut = function() {
-    console.log("httpClient:: logging OUT current user: " + httpClient.getToken());
-    localStorage.removeItem('token')
     delete axios.defaults.headers.common['Authorization']
     return true
 }
 
-httpClient.getModel = function(model, callback) {
-    let token = httpClient.getToken();
+httpClient.getModel = function(token, model, callback) {
     if (token) {
         axios.defaults.headers.common['Authorization'] = token;
     }
-    axios.get(SERVER_URL + model).then( (response) => {
+    axios.get(API_ROOT + model).then( (response) => {
         if (response.status === 200) {
             if (callback) {
-                callback(response);
+                try {
+                    callback(response);
+                } catch (e) {
+                    console.error("Catching ERROR on callback: " + e, e);
+                }
+
             }
         } else {
             console.log("httpClient.getModel: Unexpected OK status ["+response.status+"]. See https://github.com/axios/axios#handling-errors");
         }
     }).catch(
         function (response) {
-            console.log("httpClient:: catching error ["+response.status+"|"+response+"]");
+            console.log("httpClient:: catching server error ["+response.status+"|"+response+"]");
             let errors = [];
             let errorSum = {}
-            if (response.status === 401) {
-                httpClient.logOut();
+            if (response.status === 401 || response.status === 403) {
+                api.logOut();
                 errors.push('Your session has expired or is not active.');
             } else {
                 errors.push('Try again in a minute and if it is still failing, call @dtodo1paco');
@@ -97,12 +81,8 @@ httpClient.getModel = function(model, callback) {
     )
 }
 
-httpClient.postModel = function(model, properties, callback) {
-    let token = httpClient.getToken();
-    if (token) {
-        axios.defaults.headers.common['Authorization'] = token;
-    }
-    axios.post(SERVER_URL + model, properties).then( (response) => {
+httpClient.postModel = function(token, model, properties, callback) {
+    axios.post(API_ROOT + model, properties).then( (response) => {
         if (response.status < 300) {
             if (callback) {
                 callback(response);
@@ -116,7 +96,7 @@ httpClient.postModel = function(model, properties, callback) {
             let errors = [];
             let errorSum = {}
             if (response.status === 401) {
-                httpClient.logOut();
+                api.logOut();
                 errors.push('Your session has expired or is not active.');
             } else {
                 errors.push('Try again in a minute and if it is still failing, call @dtodo1paco');
@@ -132,7 +112,8 @@ httpClient.postModel = function(model, properties, callback) {
     )
 }
 
-// During initial app load attempt to set a localStorage stored token
-// as a default header for all api requests.
-axios.defaults.headers.common['Authorization'] = httpClient.getToken()
+httpClient.setAuthToken = function (token) {
+    axios.defaults.headers.common['Authorization'] = token
+}
+
 export default httpClient

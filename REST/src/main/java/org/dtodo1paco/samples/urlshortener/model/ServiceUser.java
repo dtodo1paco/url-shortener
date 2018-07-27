@@ -48,4 +48,8 @@ public class ServiceUser implements Serializable {
 	public void setEnabled(Boolean enabled) {
 		this.enabled = enabled;
 	}
+	
+	public String toString() {
+		return "ServiceUser {username:"+userName+", role:"+role+"}";
+	}
 }

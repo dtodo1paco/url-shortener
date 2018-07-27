@@ -10,6 +10,10 @@
     ],
     "modulePaths": ["src"],
     "testRegex": "tests/.*\\.test\\.(js|jsx)$",
-
-    "testEnvironment": "node"
+    "testEnvironment": "jsdom",
+    "setupFiles": ["<rootDir>/tests/config/localStorage-mock.js"],
+    "globals": {
+      "window": true,
+      "NODE_ENV": "test"
+    }
 }

@@ -5,7 +5,6 @@ package org.dtodo1paco.samples.urlshortener.test;
 
 import static org.junit.Assert.assertEquals;
 
-import java.nio.charset.Charset;
 import java.util.Date;
 import java.util.List;
 
@@ -15,7 +14,6 @@ import org.dtodo1paco.samples.urlshortener.repository.ResourceRepository;
 import org.junit.After;
 import org.junit.AfterClass;
 import org.junit.Before;
-import org.junit.BeforeClass;
 import org.junit.FixMethodOrder;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -29,7 +27,6 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.crypto.codec.Base64;
 import org.springframework.test.context.junit4.SpringRunner;
 
 /**
@@ -49,7 +46,7 @@ public class URLShortenerTest {
 
 	@Autowired
 	private ResourceRepository resourceRepo;
-	
+
 	@LocalServerPort
 	private int port;
 
@@ -61,7 +58,7 @@ public class URLShortenerTest {
 	private static StringBuilder output = new StringBuilder("");
 
 	private static boolean initialized = false;
-	
+
 	public static void initClass() {
 	}
 
@@ -83,8 +80,8 @@ public class URLShortenerTest {
 				DEFAULT_HEADERS);
 
 		ResponseEntity<Resource> response = restTemplate.exchange(
-				createURLWithPort("/url"), HttpMethod.POST, entity,
-				Resource.class);
+				TestUtils.createURLWithPort("/url", port), HttpMethod.POST,
+				entity, Resource.class);
 		Resource resp = response.getBody();
 		assertEquals(HttpStatus.CREATED, response.getStatusCode());
 		assertEquals(res.getSource(), resp.getSource());
@@ -99,31 +96,33 @@ public class URLShortenerTest {
 		HttpEntity<Resource> entity = new HttpEntity<Resource>(res,
 				DEFAULT_HEADERS);
 		ResponseEntity<Resource> response = restTemplate.exchange(
-				createURLWithPort("/url/" + code), HttpMethod.GET, entity,
-				Resource.class);
+				TestUtils.createURLWithPort("/url/" + code, port),
+				HttpMethod.GET, entity, Resource.class);
 		debug("resource found [" + code + "] was [" + response + "]");
 		assertEquals(HttpStatus.OK, response.getStatusCode());
-		assertEquals(URLShortenerTest.URL_TO_MAP, response.getBody().getSource());
+		assertEquals(URLShortenerTest.URL_TO_MAP, response.getBody()
+				.getSource());
 	}
 
 	@Test
 	public void t11_searchResources() {
 		HttpEntity<Resource> entity = new HttpEntity<Resource>(
-				createHeaders(URLShortenerTest.USERNAME,
+				TestUtils.createAuthHeaders(URLShortenerTest.USERNAME,
 						URLShortenerTest.PASSWORD));
 		ResponseEntity<List> response = restTemplate.exchange(
-				createURLWithPort("/user/urls"), HttpMethod.GET, entity, List.class);
+				TestUtils.createURLWithPort("/user/urls", port),
+				HttpMethod.GET, entity, List.class);
 		debug("allResources count: " + response.getBody().size());
 		assertEquals(HttpStatus.OK, response.getStatusCode());
-		assertEquals(initialResources+1, response.getBody().size());
+		assertEquals(initialResources + 1, response.getBody().size());
 	}
 
 	@Test
 	public void t20_followResource() {
 		String code = URLShortenerTest.URL_TO_MAP_SHORTENED;
-		ResponseEntity<Void> response = restTemplate
-				.exchange(createURLWithPort("/" + code), HttpMethod.GET, null,
-						Void.class);
+		ResponseEntity<Void> response = restTemplate.exchange(
+				TestUtils.createURLWithPort("/" + code, port), HttpMethod.GET,
+				null, Void.class);
 		debug("follow [" + code + "] was [" + response + "]");
 
 		assertEquals(HttpStatus.MOVED_PERMANENTLY, response.getStatusCode());
@@ -133,8 +132,8 @@ public class URLShortenerTest {
 
 	@Test
 	public void t_30_updResource() {
-		HttpHeaders headers = createHeaders(URLShortenerTest.USERNAME,
-				URLShortenerTest.PASSWORD);
+		HttpHeaders headers = TestUtils.createAuthHeaders(
+				URLShortenerTest.USERNAME, URLShortenerTest.PASSWORD);
 		String code = URLShortenerTest.URL_TO_MAP_SHORTENED;
 		Resource res = new Resource();
 		res.setShortened(code);
@@ -143,41 +142,40 @@ public class URLShortenerTest {
 		res.setCreated(new Date());
 		HttpEntity<Resource> entity = new HttpEntity<Resource>(res, headers);
 		ResponseEntity<Resource> response = restTemplate.exchange(
-				createURLWithPort("/user/url"), HttpMethod.PUT,
+				TestUtils.createURLWithPort("/user/url", port), HttpMethod.PUT,
 				entity, Resource.class);
 		debug("updated [" + code + "] was [" + response + "]");
 		assertEquals(HttpStatus.OK, response.getStatusCode());
 		assertEquals(URLShortenerTest.USERNAME, response.getBody().getOwner());
 	}
-	
+
 	@Test
 	public void t_40_delResource() {
-		HttpHeaders headers = createHeaders(URLShortenerTest.USERNAME,
-				URLShortenerTest.PASSWORD);
+		HttpHeaders headers = TestUtils.createAuthHeaders(
+				URLShortenerTest.USERNAME, URLShortenerTest.PASSWORD);
 		String code = URLShortenerTest.URL_TO_MAP_SHORTENED;
 		Resource res = new Resource();
 		res.setShortened(code);
 		HttpEntity<Resource> entity = new HttpEntity<Resource>(res, headers);
 		ResponseEntity<Resource> response = restTemplate.exchange(
-				createURLWithPort("/user/url/" + code), HttpMethod.DELETE,
-				entity, Resource.class);
+				TestUtils.createURLWithPort("/user/url/" + code, port),
+				HttpMethod.DELETE, entity, Resource.class);
 		debug("deleted [" + code + "] was [" + response + "]");
 		assertEquals(HttpStatus.OK, response.getStatusCode());
-		assertEquals(URLShortenerTest.URL_TO_MAP, response.getBody().getSource());
+		assertEquals(URLShortenerTest.URL_TO_MAP, response.getBody()
+				.getSource());
 	}
 
 	@After
 	public void afterTest() {
 		currentResources = resourceRepo.count();
 	}
-	
+
 	@AfterClass
 	public static void assertOutput() {
 		assertEquals(initialResources, currentResources);
 	}
 
-
-	
 	private Resource getSampleResource() {
 		int random = Double.valueOf(Math.floor(Math.random() * 20)).intValue();
 		Resource res = new Resource();
@@ -192,22 +190,6 @@ public class URLShortenerTest {
 		Resource res = new Resource();
 		res.setSource(src);
 		return res;
-	}
-
-	private String createURLWithPort(String uri) {
-		return "http://localhost:" + port + uri;
-	}
-
-	private HttpHeaders createHeaders(String username, String password) {
-		return new HttpHeaders() {
-			{
-				String auth = username + ":" + password;
-				byte[] encodedAuth = Base64.encode(auth.getBytes(Charset
-						.forName("US-ASCII")));
-				String authHeader = "Basic " + new String(encodedAuth);
-				set("Authorization", authHeader);
-			}
-		};
 	}
 
 	private void debug(String msg) {

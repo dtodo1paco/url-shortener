@@ -1,0 +1,33 @@
+{
+  "data":{
+  },
+  "status":0,
+  "statusText":"",
+  "headers":{
+    "pragma":"no-cache",
+    "content-type":"application/json;charset=UTF-8",
+    "cache-control":"no-cache, no-store, max-age=0, must-revalidate",
+    "expires":"0"
+  },
+  "config":{
+    "transformRequest":{
+    },
+    "transformResponse":{
+    },
+    "headers":{
+      "Accept":"application/json, text/plain, */*",
+      "Authorization":{
+      },
+      "Content-Type":"application/json;charset=utf-8"
+    },
+    "timeout":0,
+    "xsrfCookieName":"XSRF-TOKEN",
+    "xsrfHeaderName":"X-XSRF-TOKEN",
+    "maxContentLength":-1,
+    "method":"",
+    "url":"",
+    "data":""
+  },
+  "request":{
+  }
+}

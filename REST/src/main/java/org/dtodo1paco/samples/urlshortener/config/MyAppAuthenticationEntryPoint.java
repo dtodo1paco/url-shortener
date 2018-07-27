@@ -17,11 +17,25 @@ public class MyAppAuthenticationEntryPoint extends BasicAuthenticationEntryPoint
 	@Override
 	public void commence(HttpServletRequest request, HttpServletResponse response,
 		     AuthenticationException authException) throws IOException, ServletException {
-		response.addHeader("WWW-Authenticate", "Basic realm=\"" + getRealmName() + "\"");
-		response.sendError(HttpServletResponse.SC_UNAUTHORIZED, authException.getMessage());
+        if(isPreflight(request)){
+        	response.addHeader("Access-Control-Allow-Origin", request.getHeader("Origin"));
+    		response.setHeader("Access-Control-Allow-Headers", "Authorization");
+            response.setStatus(HttpServletResponse.SC_NO_CONTENT);
+        } else {
+        	response.addHeader("WWW-Authenticate", "Basic realm=\"" + getRealmName() + "\"");    		
+    		response.sendError(HttpServletResponse.SC_UNAUTHORIZED, authException.getMessage());       	
+        }
 	}
 	@Override
 	public void afterPropertiesSet() throws Exception {
 		setRealmName(MyAppAuthenticationEntryPoint.REALM);
 	}
+    /**
+     * Checks if this is a X-domain pre-flight request.
+     * @param request
+     * @return
+     */
+    private boolean isPreflight(HttpServletRequest request) {
+        return "OPTIONS".equals(request.getMethod());
+    }
 }

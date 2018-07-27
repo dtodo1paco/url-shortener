@@ -1,13 +1,12 @@
 package org.dtodo1paco.samples.urlshortener.controller;
 
-import java.io.UnsupportedEncodingException;
 import java.net.URI;
 import java.security.Principal;
 import java.util.Date;
-import java.util.UUID;
 
 import javax.servlet.http.HttpServletRequest;
 
+import org.dtodo1paco.auth.AuthUtils;
 import org.dtodo1paco.samples.urlshortener.URLShortenerUtil;
 import org.dtodo1paco.samples.urlshortener.model.Resource;
 import org.dtodo1paco.samples.urlshortener.model.ResourceVisit;
@@ -57,7 +56,7 @@ public class URLPublicController {
 			result = new Resource();
 			result.setShortened(code);
 			result.setSource(url);
-			result.setOwner(getUserName());
+			result.setOwner(AuthUtils.getUserName(context));
 			result.setCreated(new Date());
 			result = resourceRepo.save(result);
 		}
@@ -110,14 +109,6 @@ public class URLPublicController {
 		return context.getRemoteAddr();
 	}
 	
-	/**
-	 * Gets the username if present
-	 * @return
-	 */
-	private String getUserName() {
-		return context.getUserPrincipal() != null ? context.getUserPrincipal()
-				.getName() : null;
-	}
 	/**
 	 * Saves visit of resource
 	 * 

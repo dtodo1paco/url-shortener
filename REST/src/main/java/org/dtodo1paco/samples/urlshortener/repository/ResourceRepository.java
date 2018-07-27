@@ -3,6 +3,8 @@
  */
 package org.dtodo1paco.samples.urlshortener.repository;
 
+import java.util.List;
+
 import org.dtodo1paco.samples.urlshortener.model.Resource;
 import org.springframework.data.mongodb.repository.MongoRepository;
 
@@ -18,5 +20,6 @@ public interface ResourceRepository extends MongoRepository<Resource, String> {
 	 * @return
 	 */
 	public Resource findByShortened(String shortened);
+	public List<Resource> findByOwner(String owner);
 
 }

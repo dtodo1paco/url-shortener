@@ -1,8 +1,15 @@
 package org.dtodo1paco.samples.urlshortener.controller;
+
 import java.util.List;
 
+import javax.servlet.http.HttpServletRequest;
+
+import org.dtodo1paco.auth.AuthUtils;
+import org.dtodo1paco.samples.urlshortener.URLShortenerUtil;
 import org.dtodo1paco.samples.urlshortener.model.Resource;
+import org.dtodo1paco.samples.urlshortener.model.ServiceUser;
 import org.dtodo1paco.samples.urlshortener.repository.ResourceRepository;
+import org.dtodo1paco.samples.urlshortener.repository.ServiceUserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -17,14 +24,28 @@ import org.springframework.web.bind.annotation.RequestMapping;
 @Controller
 @RequestMapping("user")
 public class URLPrivateController {
-	
+
 	@Autowired
 	private ResourceRepository repository;
+
+	@Autowired
+	private HttpServletRequest context;
+	
+	@Autowired
+	private ServiceUserRepository users;
+	
 	
 	// GET
 	@GetMapping("urls")
 	public ResponseEntity<List<Resource>> getAll() {
-		List<Resource> list = repository.findAll();
+		String username = AuthUtils.getUserName(context);
+		ServiceUser user = users.findByUserName(username);
+		List<Resource> list = null;
+		if (URLShortenerUtil.isAdmin(user)) {
+			list = repository.findAll();
+		} else {
+			list = repository.findByOwner(username);
+		}
 		return new ResponseEntity<List<Resource>>(list, HttpStatus.OK);
 	}
 
@@ -40,7 +61,7 @@ public class URLPrivateController {
 			return new ResponseEntity<Resource>(HttpStatus.CONFLICT);
 		}
 	}
-	
+
 	// REMOVE
 	@DeleteMapping("url/{code}")
 	public ResponseEntity<Resource> delete(@PathVariable("code") String code) {

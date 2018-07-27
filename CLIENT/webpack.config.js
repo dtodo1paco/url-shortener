@@ -32,6 +32,9 @@ module.exports = {
       }
     ]
   },
+  node: {
+    fs: "empty"
+  },
   output: {
     path: __dirname + "/../REST/src/main/resources/static/js",
     filename: "bundle.js"

@@ -11,6 +11,7 @@ import org.springframework.security.config.annotation.method.configuration.Enabl
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
+import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.web.authentication.Http403ForbiddenEntryPoint;
 
@@ -19,9 +20,6 @@ import org.springframework.security.web.authentication.Http403ForbiddenEntryPoin
 @EnableGlobalMethodSecurity(securedEnabled = true)
 @Order(2)
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
-
-	public static final String ROLE_ADMIN = "ADMIN";
-	public static final String ROLE_USER = "USER";
 
 	@Autowired
 	private MyAppUserDetailsService myAppUserDetailsService;
@@ -59,9 +57,14 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 			.and()
 				.addFilter(new JWTAuthenticationFilter(authenticationManager()))
 				.addFilter(new JWTAuthorizationFilter(authenticationManager()))
-			.httpBasic().realmName(MyAppAuthenticationEntryPoint.REALM)
-				.authenticationEntryPoint(myAppAuthenticationEntryPoint);
-		;
+			.httpBasic()
+				.realmName(MyAppAuthenticationEntryPoint.REALM)
+				.authenticationEntryPoint(myAppAuthenticationEntryPoint)
+				// We don't need sessions to be created.;
+				.and().sessionManagement().sessionCreationPolicy(
+						SessionCreationPolicy.STATELESS)
+			.and()
+			.exceptionHandling().authenticationEntryPoint(new Http403ForbiddenEntryPoint());
 	}
 
 	@Autowired
@@ -71,7 +74,5 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 		auth.userDetailsService(myAppUserDetailsService).passwordEncoder(
 				passwordEncoder);
 	}
-
-	private static final String[] _ROLES = { ROLE_ADMIN, ROLE_USER };
 
 }

@@ -8,7 +8,7 @@ This is a sample project to test [Spring-boot](https://spring.io/projects/spring
 It is based on some popular URL shortener services such as [bitly](https://bitly.com/) or [goo.gl](https://goo.gl/).
 
 ### Screenshots
-![URLShortener|Home](https://github.com/dtodo1paco/url-shortener/raw/master/images/image_20180720_2.png)
+![URLShortener|Home](https://github.com/dtodo1paco/url-shortener/raw/master/images/image_20180720_1.png)
 ![URLShortener|Login](https://github.com/dtodo1paco/url-shortener/raw/master/images/image_20180720_2.png)
 ![URLShortener|Private area](https://github.com/dtodo1paco/url-shortener/raw/master/images/image_20180720_4.png)
 ### Features

@@ -17,12 +17,9 @@ public class MyAppAuthenticationEntryPoint extends BasicAuthenticationEntryPoint
 	@Override
 	public void commence(HttpServletRequest request, HttpServletResponse response,
 		     AuthenticationException authException) throws IOException, ServletException {
-		
         if(isPreflight(request)){
-        	//System.out.println("OPTIONS request");
         	response.addHeader("Access-Control-Allow-Origin", request.getHeader("Origin"));
     		response.setHeader("Access-Control-Allow-Headers", "Authorization");
-
             response.setStatus(HttpServletResponse.SC_NO_CONTENT);
         } else {
         	response.addHeader("WWW-Authenticate", "Basic realm=\"" + getRealmName() + "\"");    		

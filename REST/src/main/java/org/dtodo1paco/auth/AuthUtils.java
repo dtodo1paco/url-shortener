@@ -20,4 +20,5 @@ public class AuthUtils {
 		return context.getUserPrincipal() != null ? context.getUserPrincipal()
 				.getName() : null;
 	}
+	
 }

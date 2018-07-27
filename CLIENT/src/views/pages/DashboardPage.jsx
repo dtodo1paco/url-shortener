@@ -2,20 +2,23 @@ import React from "react"
 import { Redirect } from 'react-router-dom';
 import CircularProgress from 'react-md/lib/Progress/CircularProgress';
 import URLDataTable from 'views/components/URLDataTable'
-import httpClient from 'modules/httpClient'
+import Message from 'views/components/Message';
+import api from 'modules/api'
 
 class DashboardPage extends React.Component {
 
-    constructor(props, context) {
-        super(props, context);
+    constructor(props) {
+        super(props);
         this.state = {
             loading: false,
-            urls: []
+            urls: null,
+            goToLogin: false
         }
         this.checkResponse = this.checkResponse.bind(this);
+        this.relogin = this.relogin.bind(this);
     }
 
-    componentDidMount() {
+    componentDidMount () {
         this.doSearch();
     }
 
@@ -27,7 +30,7 @@ class DashboardPage extends React.Component {
 
     doSearch () {
         this.setState({loading: true});
-        httpClient.getModel("/user/urls", this.checkResponse)
+        api.getModel("/user/urls", this.checkResponse);
     }
 
     checkResponse (response) {
@@ -53,18 +56,38 @@ class DashboardPage extends React.Component {
         return headers;
     }
 
+    relogin() {
+        console.log("relogin");
+    }
+
     render() {
-        let headers = [
-            {label: 'Created', field: 'created'},
-            {label: 'Code',    field: 'shortened'},
-            {label: 'Source',  field: 'source'}
-        ];
-        if (this.state.loading) {
-            return <CircularProgress key="progress" id="url-shortener-dashboard" />
+        let messages = null;
+        if (this.state.errors != null && this.state.errors.summary) {
+            let relogin = <div>Click <a href="#" onClick={this.relogin}>here</a> to go to login page</div>
+            this.state.errors.errors.push(relogin);
+            messages = <Message success={false} summary={this.state.errors.summary} messages={this.state.errors.errors} />
+        }
+
+        let content = null;
+        if (this.state.loading || this.state.urls === null) {
+            content = <CircularProgress key="progress" id="url-shortener-dashboard" />
+        } else if (this.state.goToLogin === true) {
+            let referer = {from: '/dashboard'};
+            content = <div></div> // <Redirect to="/login" state={referer} />;
+        } else {
+            let headers = [
+                {label: 'Created', field: 'created'},
+                {label: 'Code',    field: 'shortened'},
+                {label: 'Source',  field: 'source'}
+            ];
+            content = <URLDataTable headers={headers} data={this.state.urls} pageSize={10} />
         }
         return (
-            <URLDataTable headers={headers} data={this.state.urls} pageSize={10} />
-        )
+            <div id="dashboard-page">
+                {messages}
+                {content}
+            </div>
+            )
     }
 }
 

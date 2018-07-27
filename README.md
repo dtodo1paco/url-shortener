@@ -2,13 +2,15 @@
 
 ### A simple URL Shorten service 
 
-![URLShortener](https://github.com/dtodo1paco/url-shortener/raw/master/images/demo.gif)
+![URLShortener|demo](https://github.com/dtodo1paco/url-shortener/raw/master/images/demo.gif)
 
 This is a sample project to test [Spring-boot](https://spring.io/projects/spring-boot) capabilities to serve REST operations and a SPA client made with [React-md](https://react-md.mlaursen.com/) to use them.
 It is based on some popular URL shortener services such as [bitly](https://bitly.com/) or [goo.gl](https://goo.gl/).
 
-![URLShortener](https://github.com/dtodo1paco/url-shortener/raw/master/images/image_1.png)
-
+### Screenshots
+![URLShortener|Home](https://github.com/dtodo1paco/url-shortener/raw/master/images/image_20180720_2.png)
+![URLShortener|Login](https://github.com/dtodo1paco/url-shortener/raw/master/images/image_20180720_2.png)
+![URLShortener|Private area](https://github.com/dtodo1paco/url-shortener/raw/master/images/image_20180720_4.png)
 ### Features
 
 URL has many features including:
@@ -17,11 +19,19 @@ URL has many features including:
 - When a code is requested, the server would redirect your browser to the corresponding source URL
 - Every code request is saved to keep track of shorten URL use
 - Unit/Functional testing for all the services
+- Every authenticated user has access to visits of its shortened URLs
 
 #### ToDo
 - User registration
-- Every authenticated user has access to visits of its shortened URLs
 - Admin desktop
+
+### Versions
+#### v 0.0.1
+Initial working version with basic features
+#### v 0.0.2
+Add unit & integration tests for both sides (server & client)
+#### v 0.0.3
+Add Authentication by JWT token and a basic dashboard with paginated URLs
 
 ### Testing
 To run tests on Client part, you only have to type:
@@ -110,7 +120,7 @@ to generate a new build.js for the Server project. And you're done.
 
 ### Some considerations
 This project is just for test the technologies, a real project will need some improvements like:
-- run after a web server (Apache, nginx,...) corectly configured to avoid hacker attacks (mod-security, remove any server information,...).
+- run after a web server (Apache, nginx,...) correctly configured to avoid hacker attacks (mod-security, remove any server information,...).
 - If needed, a load balancer to manage load peaks. To make the service scalable, you can run multiple spring-boot servers on all the nodes you want (balanced by Apache or similar) and connect all of them to the same database (see [application.properties](https://github.com/dtodo1paco/url-shortener/REST/src/main/resources/application.properties)).
 - There are no automated Test neither in the client or the server side. This is **unacceptable** for a production-ready webapp.
 

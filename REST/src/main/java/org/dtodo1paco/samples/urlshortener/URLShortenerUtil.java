@@ -9,6 +9,8 @@ import java.net.URISyntaxException;
 import java.nio.charset.StandardCharsets;
 import java.util.UUID;
 
+import org.dtodo1paco.samples.urlshortener.model.ServiceUser;
+
 import com.google.common.hash.Hashing;
 
 /**
@@ -23,6 +25,10 @@ public class URLShortenerUtil {
 	public static final String HEADER_USER_AGENT = "user-agent";
 	public static final String HEADER_REFERER = "referer";
 	public static final String HEADER_FORWARDED_FOR = "X-FORWARDED-FOR";
+	
+	public static final String ROLE_ADMIN = "ADMIN";
+	public static final String ROLE_USER = "USER";
+	public static final String[] _ROLES = { ROLE_ADMIN, ROLE_USER };
 
 	public static String doShort(String url) {
 		final String key = Hashing.murmur3_32()
@@ -46,6 +52,13 @@ public class URLShortenerUtil {
 		URI uri = new URI(url);
 		if (uri.getScheme().startsWith("http")) {
 			return true;
+		}
+		return false;
+	}
+	
+	public static boolean isAdmin(ServiceUser user) {
+		if (user != null) {
+			return user.getRole().equals(URLShortenerUtil.ROLE_ADMIN);
 		}
 		return false;
 	}

@@ -1,30 +1,23 @@
+import React from 'react';
 
-import React, { PropTypes } from 'react';
 import { Redirect } from 'react-router-dom';
 import LoginForm from 'views/components/LoginForm.jsx';
 
-import httpClient from 'modules/httpClient'
+import api from 'modules/api'
 
 class LoginPage extends React.Component {
     constructor(props, context) {
         super(props, context);
-        const storedMessage = localStorage.getItem('successMessage');
-        let successMessage = '';
-        if (storedMessage) { // cleanup last message
-            successMessage = storedMessage;
-            localStorage.removeItem('successMessage');
-        }
-
         // set the initial component state
         this.state = {
             loading: false,
             errors: {},
-            successMessage,
+            successMessage: '',
             user: {
                 username: '',
-                password: ''
-            },
-            navigateTo: null
+                password: '',
+                data: null,
+            }
         };
         this.processForm = this.processForm.bind(this);
         this.changeUser = this.changeUser.bind(this);
@@ -53,14 +46,23 @@ class LoginPage extends React.Component {
         let user = this.state.user;
         if (user.username.length > 0) {
             this.setState ({loading: true});
-            httpClient.logIn(this.sanitize(), this.checkResponse);
+            api.logIn(this.sanitize(), this.checkResponse);
         }
-
     }
 
     checkResponse(response) {
         let code = response.status;
-        if (code) {
+        if (code === 200) {
+            let user = this.state.user;
+            user['data'] = response.data;
+            this.setState({
+                loading: false,
+                user: user
+            });
+            if (this.props.loginHandler) {
+                this.props.loginHandler.handleLoginSuccess(response.data, this.getReferer());
+            }
+        } else {
             let errors = [];
             if (code === 401) {
                 errors.push('Bad credentials! Make sure you type correctly your access data');
@@ -74,12 +76,6 @@ class LoginPage extends React.Component {
                     errors: errors
                 }
             })
-        } else {
-            this.props.loginHandler.handleLoginSuccess(response);
-            this.setState( {
-                navigateTo: "/dashboard",
-                loading: false
-            });
         }
     }
 
@@ -98,14 +94,17 @@ class LoginPage extends React.Component {
         });
     }
 
+    getReferer() {
+        if (this.props.location.state != null && this.props.location.state.referer != null) {
+            return this.props.location.state.referer;
+        }
+        return null;
+    }
+
     /**
      * Render the component.
      */
     render() {
-        if (this.state.navigateTo != null) {
-            let referer = this.props.location.pathname;
-            return <Redirect to={this.state.navigateTo || { from: { pathname: {referer} }}} />;
-        }
         return (
             <LoginForm
                 onSubmit={this.processForm}
@@ -119,9 +118,4 @@ class LoginPage extends React.Component {
     }
 
 }
-
-LoginPage.contextTypes = {
-    router: PropTypes.object.isRequired
-};
-
 export default LoginPage;

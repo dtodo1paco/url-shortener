@@ -14,9 +14,7 @@ export default class URLDataTable extends React.Component {
 
     constructor(props) {
         super(props);
-
         let headers = props.headers;
-
         this.state = {
             headers: headers,
             data: props.data,
@@ -27,14 +25,14 @@ export default class URLDataTable extends React.Component {
                 field: 'created'
             }
         }
-
+        this.handlePagination = this.handlePagination.bind(this);
     }
 
-    handlePagination = (start, rowsPerPage) => {
+    handlePagination (start, rowsPerPage) {
         this.setState({ slicedData: this.state.data.slice(start, start + rowsPerPage) });
     }
 
-    handleSort = (field) => (e) => {
+    handleSort (field) {
         const ascending = !this.state.order.asc;
         let sortedItems = this.state.slicedData.slice();
         sortedItems = sortedItems.sort(sort_by(field.toLowerCase(), ascending, null));
@@ -57,8 +55,7 @@ export default class URLDataTable extends React.Component {
                         {headers.map(header =>
                             <TableColumn key={header.field} grow
                                 sorted={this.state.order.field === header.field && this.state.order.asc}
-
-                                role="button" onClick={this.handleSort(header.field)}>
+                                role="button" onClick={() => this.handleSort(header.field)}>
                                 {header.label}
                             </TableColumn>
                         )}

@@ -27,7 +27,7 @@ const LoginForm = ({
                 }
           </div>}
 
-        <form action="/" onSubmit={onSubmit} className="md-grid" >
+        <form action="/" onSubmit={onSubmit} className="md-grid" id="login-form" >
                 <TextField
                     required
                     errorText='Please, type your email address'
@@ -52,12 +52,10 @@ const LoginForm = ({
                     onChange={onChange}
                     className="md-cell md-cell--12 md-cell--4-phone md-cell--8-tablet"
                 />
-                <Button flat type="submit" onSubmit={onSubmit} primary
+                <Button id="login-submit" flat type="submit" onSubmit={onSubmit} primary
                     className="md-cell md-cell--12 md-cell--4-phone md-cell--8-tablet">
                     Log in
                 </Button>
-
-
             <CardText>Don't have an account? <Link to={'/signup'}>Create one</Link>.</CardText>
         </form>
     </Card>

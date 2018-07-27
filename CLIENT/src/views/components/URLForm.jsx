@@ -7,7 +7,7 @@ import CircularProgress from 'react-md/lib/Progress/CircularProgress';
 import Media, { MediaOverlay } from "react-md/lib/Media"
 import Button from "react-md/lib/Buttons"
 import { TextField } from 'react-md';
-import httpClient from 'modules/httpClient';
+import api from 'modules/api';
 
 export default class URLForm extends React.Component {
     constructor() {
@@ -27,7 +27,7 @@ export default class URLForm extends React.Component {
 
     checkResponse(response) {
         if (response && response.data && response.data.shortened) {
-            let link = location + response.data.shortened;
+            let link = location!='about:blank'?location:'' + response.data.shortened;
             link = link.replace('/#','');
             this.setState({
                 urlShortened: link,
@@ -47,7 +47,7 @@ export default class URLForm extends React.Component {
         let url = this.state.urlValue;
         if (url.length > 0) {
             loading = true;
-            httpClient.postModel("/url", {source: url}, this.checkResponse);
+            api.postModel("url", {source: url}, this.checkResponse);
         }
         this.setState ({numClicks: nClicks, loading: loading});
     }
@@ -68,9 +68,8 @@ export default class URLForm extends React.Component {
     render() {
         const { urlValue, numClicks, loading, urlShortened } = this.state;
         let result = null;
-
         if (loading) {
-            result = <CircularProgress key="progress" id="url-shortener" />
+            result = <CircularProgress key="progress" id="url-shortener-waiting" />
         } else if (urlShortened) {
             result = <div id="url-shortened">
                 <div className="result md-cell md-cell--10 md-cell--3-phone md-cell--6-tablet">

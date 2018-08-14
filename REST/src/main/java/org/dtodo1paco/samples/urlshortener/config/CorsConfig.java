@@ -22,9 +22,11 @@ public class CorsConfig  {
         return new WebMvcConfigurerAdapter() {
             @Override
             public void addCorsMappings(CorsRegistry registry) {
-                registry.addMapping("/**")
-                	.allowedOrigins("http://localhost:3000") // for dev
+/*
+            	registry.addMapping("/**")
+                	.allowedOrigins("http://localhost:3000", "http://localhost:8080") // for dev
                 ;
+*/            	
             }
         };
     }

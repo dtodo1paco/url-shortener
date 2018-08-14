@@ -24722,7 +24722,7 @@
 	var node = ("production");
 
 	if (node === 'production') {
-	    backendHost = "http://localhost:8080/";
+	    backendHost = "https://dtodo1paco-url-shortener.herokuapp.com/";
 	} else {
 	    if (node === 'development') {
 	        backendHost = "http://localhost:8080/";
@@ -26375,7 +26375,8 @@
 	        key: "checkResponse",
 	        value: function checkResponse(response) {
 	            if (response && response.data && response.data.shortened) {
-	                var link = location != 'about:blank' ? location : '' + response.data.shortened;
+	                var loc = location.toString();
+	                var link = loc === 'about:blank' ? loc : loc + response.data.shortened;
 	                link = link.replace('/#', '');
 	                this.setState({
 	                    urlShortened: link,

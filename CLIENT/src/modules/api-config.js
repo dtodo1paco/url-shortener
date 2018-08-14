@@ -3,7 +3,7 @@ let backendHost;
 let node = process.env.NODE_ENV;
 
 if (node === 'production') {
-    backendHost = "http://localhost:8080/";
+    backendHost = "https://dtodo1paco-url-shortener.herokuapp.com/";
 } else {
     if (node === 'development') {
         backendHost = "http://localhost:8080/";

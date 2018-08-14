@@ -27,7 +27,8 @@ export default class URLForm extends React.Component {
 
     checkResponse(response) {
         if (response && response.data && response.data.shortened) {
-            let link = location!='about:blank'?location:'' + response.data.shortened;
+            let loc = location.toString();
+            let link = loc==='about:blank'?loc:loc + response.data.shortened;
             link = link.replace('/#','');
             this.setState({
                 urlShortened: link,

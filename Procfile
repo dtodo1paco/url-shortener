@@ -1,0 +1,1 @@
+web: java $JAVA_OPTS -cp REST/target/classes:target/dependency/* -Dserver-port=$PORT -jar REST/target/*.jar

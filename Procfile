@@ -1,1 +1,0 @@
-web: ls -l && pwd && java $JAVA_OPTS -cp REST/target/classes:target/dependency/* -Dserver-port=$PORT -jar REST/target/url-shortener-0.0.3-SNAPSHOT.jar

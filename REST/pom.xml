@@ -83,7 +83,7 @@
 				<configuration>
 					<appName>dtodo1paco-url-shortener</appName>
 					<processTypes>
-						<web>java $JAVA_OPTS -cp target/classes:target/dependency/* MyApplication</web>
+						<web>java $JAVA_OPTS -cp target/classes:target/dependency/* org.dtodo1paco.samples.urlshortener.MyApplication</web>
 					</processTypes>
 				</configuration>
       </plugin>

@@ -34,17 +34,6 @@
                     <useSystemClassLoader>false</useSystemClassLoader>
                 </configuration>
             </plugin>
-            <plugin>
-                <groupId>com.heroku.sdk</groupId>
-                <artifactId>heroku-maven-plugin</artifactId>
-                <version>3.0.3</version>
-                    <configuration>
-                        <appName>dtodo1paco-url-shortener</appName>
-                        <processTypes>
-                            <web>java $JAVA_OPTS -cp REST/target/classes:REST/target/dependency/* org.dtodo1paco.samples.urlshortener.MyApplication</web>
-                        </processTypes>
-                    </configuration>
-            </plugin>
         </plugins>
     </build>
 

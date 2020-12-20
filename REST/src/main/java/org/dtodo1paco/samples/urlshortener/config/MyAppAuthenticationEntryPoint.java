@@ -16,7 +16,7 @@ public class MyAppAuthenticationEntryPoint extends BasicAuthenticationEntryPoint
 	
 	@Override
 	public void commence(HttpServletRequest request, HttpServletResponse response,
-		     AuthenticationException authException) throws IOException, ServletException {
+		     AuthenticationException authException) throws IOException {
         if(isPreflight(request)){
         	response.addHeader("Access-Control-Allow-Origin", request.getHeader("Origin"));
     		response.setHeader("Access-Control-Allow-Headers", "Authorization");
@@ -27,7 +27,7 @@ public class MyAppAuthenticationEntryPoint extends BasicAuthenticationEntryPoint
         }
 	}
 	@Override
-	public void afterPropertiesSet() throws Exception {
+	public void afterPropertiesSet()  {
 		setRealmName(MyAppAuthenticationEntryPoint.REALM);
 	}
     /**

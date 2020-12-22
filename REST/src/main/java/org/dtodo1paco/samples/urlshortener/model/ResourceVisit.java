@@ -42,7 +42,7 @@ public class ResourceVisit {
 
 	@Override
 	public String toString() {
-		return String.format("{%s[id=%s, date='%s', time='%s', referer='%s', userName='%s']}",
+		return String.format("{%s[id=%s, date='%s', time='%s', referer='%s', username='%s']}",
 				getClass(), getId(), getDate(), getTime(), getReferer(), getUserName());
 	}
 

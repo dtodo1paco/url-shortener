@@ -101,6 +101,7 @@ public class JwtUtil {
 	public static UsernamePasswordAuthenticationToken getAuthentication(
 			HttpServletRequest request) {
 		String token = request.getHeader(JwtUtil.HEADER_AUTH);
+		System.out.println("JwtUtil: 2 " + token);
 		if (token != null && token.startsWith(JwtUtil.HEADER_BEARER)) {
 			try {
 				String user = Jwts

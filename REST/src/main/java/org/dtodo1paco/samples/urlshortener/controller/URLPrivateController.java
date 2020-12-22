@@ -1,5 +1,6 @@
 package org.dtodo1paco.samples.urlshortener.controller;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
@@ -39,9 +40,10 @@ public class URLPrivateController {
 	@GetMapping("urls")
 	public ResponseEntity<List<Resource>> getAll() {
 		String username = AuthUtils.getUserName(context);
-		ServiceUser user = users.findByUserName(username);
+		List<ServiceUser> listOfUsers = users.findByUsername(username);
 		List<Resource> list = null;
-		if (URLShortenerUtil.isAdmin(user)) {
+		if (listOfUsers.size() != 1) list = new ArrayList<>();
+		if (URLShortenerUtil.isAdmin(listOfUsers.get(0))) {
 			list = repository.findAll();
 		} else {
 			list = repository.findByOwner(username);

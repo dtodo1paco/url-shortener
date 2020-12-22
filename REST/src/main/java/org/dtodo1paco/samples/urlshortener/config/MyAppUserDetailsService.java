@@ -1,6 +1,7 @@
 package org.dtodo1paco.samples.urlshortener.config;
 
 import java.util.Arrays;
+import java.util.List;
 
 import org.dtodo1paco.samples.urlshortener.model.ServiceUser;
 import org.dtodo1paco.samples.urlshortener.repository.ServiceUserRepository;
@@ -19,11 +20,12 @@ public class MyAppUserDetailsService implements UserDetailsService {
 	@Override
 	public UserDetails loadUserByUsername(String userName)
 			throws UsernameNotFoundException {
-		ServiceUser activeUserInfo = repository.findByUserName(userName);
+		List<ServiceUser> activeUserInfo = repository.findByUsername(userName);
+		if (activeUserInfo.size() != 1) throw new UsernameNotFoundException("Too many users by username");
 		// TODO: update statistics
-		GrantedAuthority authority = new SimpleGrantedAuthority(activeUserInfo.getRole());
-		UserDetails userDetails = (UserDetails) new User(activeUserInfo.getUserName(),
-				activeUserInfo.getPassword(), Arrays.asList(authority));
+		GrantedAuthority authority = new SimpleGrantedAuthority(activeUserInfo.get(0).getRole());
+		UserDetails userDetails = (UserDetails) new User(activeUserInfo.get(0).getUsername(),
+				activeUserInfo.get(0).getPassword(), Arrays.asList(authority));
 		return userDetails;
 	}
 }

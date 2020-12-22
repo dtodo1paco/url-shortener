@@ -1,0 +1,1 @@
+web: java $JAVA_OPTS -cp REST/target/classes:REST/target/dependency/* -jar REST/target/REST-0.0.3-SNAPSHOT.jar

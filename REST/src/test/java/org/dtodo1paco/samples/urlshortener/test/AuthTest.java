@@ -3,23 +3,23 @@
  */
 package org.dtodo1paco.samples.urlshortener.test;
 
+import static org.dtodo1paco.samples.urlshortener.model.UserConstants.ROLE_ADMIN;
 import static org.junit.Assert.assertEquals;
 
 import java.io.IOException;
-import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 import org.dtodo1paco.samples.urlshortener.MyApplication;
 import org.dtodo1paco.samples.urlshortener.model.Resource;
-import org.junit.After;
-import org.junit.AfterClass;
-import org.junit.Before;
-import org.junit.FixMethodOrder;
-import org.junit.Test;
+import org.dtodo1paco.samples.urlshortener.model.ServiceUser;
+import org.dtodo1paco.samples.urlshortener.repository.ServiceUserRepository;
+import org.junit.*;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.TestInstance;
 import org.junit.runner.RunWith;
 import org.junit.runners.MethodSorters;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.web.client.TestRestTemplate;
 import org.springframework.boot.web.server.LocalServerPort;
@@ -27,6 +27,7 @@ import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.test.context.junit4.SpringRunner;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
@@ -40,41 +41,59 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 @FixMethodOrder(MethodSorters.NAME_ASCENDING)
 public class AuthTest {
 
-	private static final String USERNAME = "dtodo1paco";
-	private static final String PASSWORD = "mi.123456";
-	private static int TOKEN_LENGTH = 187;
-	private static String HEADER_AUTH = "Authorization";
+	public static final String USERNAME = "dtodo1paco";
+	public static final String PASSWORD = "mi.123456";
 
 	@LocalServerPort
 	private int port;
 
-	private TestRestTemplate restTemplate = new TestRestTemplate();
+	@Autowired
+	private ServiceUserRepository serviceUserRepository;
 
-	public static void initClass() {
-	}
+	private TestRestTemplate restTemplate = new TestRestTemplate();
 
 	private static String token = null;
 
+	private static boolean initialized = false;
+
+	public static ServiceUser getDefaultUser () {
+		BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
+		ServiceUser defaultUser = new ServiceUser();
+		defaultUser.setEnabled(true);
+		defaultUser.setFullName("Admin test user");
+		defaultUser.setPassword(passwordEncoder.encode(PASSWORD));
+		defaultUser.setUsername(USERNAME);
+		defaultUser.setRole(ROLE_ADMIN);
+		return defaultUser;
+	}
+
 	@Before
-	public void init() {
+	public void initDb() {
+		if (initialized) return;
+		serviceUserRepository.save(AuthTest.getDefaultUser());
+		AuthTest.initialized = true;
+	}
+
+	@Before
+	public void checkDb() {
+		long usersCount = serviceUserRepository.count();
+		assertEquals(1, usersCount);
 	}
 
 	@Test
-	public void t01_auth_get_token() throws JsonProcessingException,
-			IOException {
+	public void t01_auth_get_token() {
 		HttpEntity<Resource> entity = new HttpEntity<Resource>(
 				TestUtils.createAuthHeaders(AuthTest.USERNAME,
 						AuthTest.PASSWORD));
 		ResponseEntity<HashMap> response = restTemplate.exchange(
 				TestUtils.createURLWithPort("/auth/", port), HttpMethod.GET,
 				entity, HashMap.class);
-		AuthTest.token = String.valueOf(response.getBody().get(HEADER_AUTH));
 		assertEquals(HttpStatus.OK, response.getStatusCode());
-		assertEquals(AuthTest.TOKEN_LENGTH, token.length());
+		AuthTest.token = String.valueOf(response.getBody().get("Authorization")).substring("Bearer ".length());
 	}
 
 	@Test
-	public void t02_auth_test() throws JsonProcessingException, IOException {
+	public void t02_auth_test() {
 		HttpEntity<Resource> entity = new HttpEntity<Resource>(
 				TestUtils.createAuthHeaders(AuthTest.token));
 

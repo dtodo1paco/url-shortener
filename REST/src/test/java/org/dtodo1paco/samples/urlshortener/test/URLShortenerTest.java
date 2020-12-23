@@ -4,10 +4,14 @@
 package org.dtodo1paco.samples.urlshortener.test;
 
 import org.dtodo1paco.samples.urlshortener.MyApplication;
+import org.dtodo1paco.samples.urlshortener.config.DataInitializer;
 import org.dtodo1paco.samples.urlshortener.model.Resource;
 import org.dtodo1paco.samples.urlshortener.repository.ResourceRepository;
 import org.dtodo1paco.samples.urlshortener.repository.ServiceUserRepository;
-import org.junit.*;
+import org.junit.After;
+import org.junit.Before;
+import org.junit.FixMethodOrder;
+import org.junit.Test;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.runner.RunWith;
 import org.junit.runners.MethodSorters;
@@ -58,7 +62,7 @@ public class URLShortenerTest {
 		if (!URLShortenerTest.initialized) {
 			debug("INIT");
 			initialResources = total;
-			if (serviceUserRepository.count() == 0) serviceUserRepository.save(AuthTest.getDefaultUser());
+			if (serviceUserRepository.count() == 0) serviceUserRepository.save(DataInitializer.getDefaultUser(AuthTest.PASSWORD));
 			URLShortenerTest.initialized = true;
 		}
 		debug("current resources: " + total);

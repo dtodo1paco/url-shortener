@@ -3,20 +3,11 @@
  */
 package org.dtodo1paco.samples.urlshortener.test;
 
-import static org.dtodo1paco.samples.urlshortener.model.UserConstants.ROLE_ADMIN;
-import static org.junit.Assert.assertEquals;
-
-import java.io.IOException;
-import java.util.HashMap;
-import java.util.List;
-
 import org.dtodo1paco.samples.urlshortener.MyApplication;
+import org.dtodo1paco.samples.urlshortener.config.DataInitializer;
 import org.dtodo1paco.samples.urlshortener.model.Resource;
-import org.dtodo1paco.samples.urlshortener.model.ServiceUser;
 import org.dtodo1paco.samples.urlshortener.repository.ServiceUserRepository;
 import org.junit.*;
-import org.junit.jupiter.api.BeforeAll;
-import org.junit.jupiter.api.TestInstance;
 import org.junit.runner.RunWith;
 import org.junit.runners.MethodSorters;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -27,10 +18,11 @@ import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.test.context.junit4.SpringRunner;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
+import java.util.HashMap;
+
+import static org.junit.Assert.assertEquals;
 
 /**
  * @author pac
@@ -56,21 +48,10 @@ public class AuthTest {
 
 	private static boolean initialized = false;
 
-	public static ServiceUser getDefaultUser () {
-		BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
-		ServiceUser defaultUser = new ServiceUser();
-		defaultUser.setEnabled(true);
-		defaultUser.setFullName("Admin test user");
-		defaultUser.setPassword(passwordEncoder.encode(PASSWORD));
-		defaultUser.setUsername(USERNAME);
-		defaultUser.setRole(ROLE_ADMIN);
-		return defaultUser;
-	}
-
 	@Before
 	public void initDb() {
 		if (initialized) return;
-		serviceUserRepository.save(AuthTest.getDefaultUser());
+		serviceUserRepository.save(DataInitializer.getDefaultUser(PASSWORD));
 		AuthTest.initialized = true;
 	}
 

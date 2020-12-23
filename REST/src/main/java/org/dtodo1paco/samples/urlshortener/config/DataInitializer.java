@@ -16,7 +16,7 @@ import static org.dtodo1paco.samples.urlshortener.model.UserConstants.ROLE_ADMIN
 @Component
 public class DataInitializer implements ApplicationRunner {
 
-  public static final String USERNAME = "dtodo1paco";
+  public static final String USERNAME = "dtodo1paco@gmail.com";
 
   private ServiceUserRepository userRepository;
 

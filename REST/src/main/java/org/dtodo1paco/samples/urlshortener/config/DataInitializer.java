@@ -16,17 +16,17 @@ import static org.dtodo1paco.samples.urlshortener.model.UserConstants.ROLE_ADMIN
 @Component
 public class DataInitializer implements ApplicationRunner {
 
-  public static final String USERNAME = "dtodo1paco@gmail.com";
+  private static final String USERNAME = "dtodo1paco@gmail.com";
 
   private ServiceUserRepository userRepository;
 
-  public static ServiceUser getDefaultUser (String password) {
+  public static ServiceUser getDefaultUser (String username, String password) {
     BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
     ServiceUser defaultUser = new ServiceUser();
     defaultUser.setEnabled(true);
     defaultUser.setFullName("Admin user " + password);
     defaultUser.setPassword(passwordEncoder.encode(password));
-    defaultUser.setUsername(USERNAME);
+    defaultUser.setUsername(username);
     defaultUser.setRole(ROLE_ADMIN);
     return defaultUser;
   }
@@ -37,10 +37,10 @@ public class DataInitializer implements ApplicationRunner {
   }
 
   public void run(ApplicationArguments args) {
-    List<ServiceUser> admins = userRepository.findByUsername("dtodo1paco");
+    List<ServiceUser> admins = userRepository.findByUsername(USERNAME);
     if (admins.isEmpty()) {
       String PASSWORD = StringUtil.generateSecureRandomPassword();
-      userRepository.save(getDefaultUser(PASSWORD));
+      userRepository.save(getDefaultUser(USERNAME, PASSWORD));
     }
   }
 

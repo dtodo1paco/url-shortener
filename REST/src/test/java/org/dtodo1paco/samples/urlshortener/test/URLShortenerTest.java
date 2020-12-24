@@ -62,7 +62,9 @@ public class URLShortenerTest {
 		if (!URLShortenerTest.initialized) {
 			debug("INIT");
 			initialResources = total;
-			if (serviceUserRepository.count() == 0) serviceUserRepository.save(DataInitializer.getDefaultUser(AuthTest.PASSWORD));
+			if (serviceUserRepository.count() == 0) serviceUserRepository.save(
+				DataInitializer.getDefaultUser(AuthTest.USERNAME, AuthTest.PASSWORD)
+			);
 			URLShortenerTest.initialized = true;
 		}
 		debug("current resources: " + total);

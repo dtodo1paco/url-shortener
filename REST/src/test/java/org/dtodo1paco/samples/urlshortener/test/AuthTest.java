@@ -51,7 +51,9 @@ public class AuthTest {
 	@Before
 	public void initDb() {
 		if (initialized) return;
-		serviceUserRepository.save(DataInitializer.getDefaultUser(PASSWORD));
+		serviceUserRepository.save(
+			DataInitializer.getDefaultUser(AuthTest.USERNAME, AuthTest.PASSWORD)
+		);
 		AuthTest.initialized = true;
 	}
 
@@ -70,7 +72,8 @@ public class AuthTest {
 				TestUtils.createURLWithPort("/auth/", port), HttpMethod.GET,
 				entity, HashMap.class);
 		assertEquals(HttpStatus.OK, response.getStatusCode());
-		AuthTest.token = String.valueOf(response.getBody().get("Authorization")).substring("Bearer ".length());
+		AuthTest.token = String.valueOf(response.getBody().get("Authorization"))
+											 .substring("Bearer ".length());
 	}
 
 	@Test

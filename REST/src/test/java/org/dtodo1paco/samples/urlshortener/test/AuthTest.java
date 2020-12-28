@@ -53,7 +53,8 @@ public class AuthTest {
 	@Before
 	public void initDb() {
 		if (initialized) return;
-		if (serviceUserRepository.count() == 0) serviceUserRepository.save(
+		List<ServiceUser> users = serviceUserRepository.findByUsername(AuthTest.USERNAME);
+		if (users.isEmpty()) serviceUserRepository.save(
 			DataInitializer.getDefaultUser(AuthTest.USERNAME, AuthTest.PASSWORD)
 		);
 		AuthTest.initialized = true;

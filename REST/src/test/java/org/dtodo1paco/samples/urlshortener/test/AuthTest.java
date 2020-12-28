@@ -6,6 +6,7 @@ package org.dtodo1paco.samples.urlshortener.test;
 import org.dtodo1paco.samples.urlshortener.MyApplication;
 import org.dtodo1paco.samples.urlshortener.config.DataInitializer;
 import org.dtodo1paco.samples.urlshortener.model.Resource;
+import org.dtodo1paco.samples.urlshortener.model.ServiceUser;
 import org.dtodo1paco.samples.urlshortener.repository.ServiceUserRepository;
 import org.junit.*;
 import org.junit.runner.RunWith;
@@ -21,6 +22,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.test.context.junit4.SpringRunner;
 
 import java.util.HashMap;
+import java.util.List;
 
 import static org.junit.Assert.assertEquals;
 
@@ -51,14 +53,17 @@ public class AuthTest {
 	@Before
 	public void initDb() {
 		if (initialized) return;
-		serviceUserRepository.save(DataInitializer.getDefaultUser(PASSWORD));
+		List<ServiceUser> users = serviceUserRepository.findByUsername(AuthTest.USERNAME);
+		if (users.isEmpty()) serviceUserRepository.save(
+			DataInitializer.getDefaultUser(AuthTest.USERNAME, AuthTest.PASSWORD)
+		);
 		AuthTest.initialized = true;
 	}
 
 	@Before
 	public void checkDb() {
-		long usersCount = serviceUserRepository.count();
-		assertEquals(1, usersCount);
+		List<ServiceUser> users = serviceUserRepository.findByUsername(AuthTest.USERNAME);
+		assertEquals(1, users.size());
 	}
 
 	@Test
@@ -70,7 +75,8 @@ public class AuthTest {
 				TestUtils.createURLWithPort("/auth/", port), HttpMethod.GET,
 				entity, HashMap.class);
 		assertEquals(HttpStatus.OK, response.getStatusCode());
-		AuthTest.token = String.valueOf(response.getBody().get("Authorization")).substring("Bearer ".length());
+		AuthTest.token = String.valueOf(response.getBody().get("Authorization"))
+											 .substring("Bearer ".length());
 	}
 
 	@Test

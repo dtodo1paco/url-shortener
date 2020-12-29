@@ -6,12 +6,8 @@ import api from "modules/api";
 const httpClient = axios.create()
 
 httpClient.logIn = function(credentials, callback) {
-    const usernamePasswordBuffer = Buffer.from(credentials.username + ':' + credentials.password);
-    const base64data = usernamePasswordBuffer.toString('base64');
     let conf = {
-        headers: {
-            "Authorization": base64data
-        }
+        auth: credentials,
     }
     axios.get(API_ROOT + "auth/", conf)
         .then((serverResponse) => {

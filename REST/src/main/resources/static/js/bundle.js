@@ -23774,7 +23774,7 @@
 	            'Authorization': "Basic " + getBTOA(credentials)
 	        }
 	    };
-	    _axios2.default.get(_apiConfig.API_ROOT + "auth/", conf).then(function (serverResponse) {
+	    _axios2.default.get(_apiConfig.API_ROOT + "/auth/", conf).then(function (serverResponse) {
 	        //console.log("httpClient.logIn serverResponse: " + JSON.stringify(serverResponse));
 	        var token = serverResponse.data.Authorization;
 	        if (token) {

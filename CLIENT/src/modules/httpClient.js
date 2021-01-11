@@ -11,7 +11,7 @@ httpClient.logIn = function(credentials, callback) {
             'Authorization': `Basic ${getBTOA(credentials)}`
         }
     }
-    axios.get(API_ROOT + "auth/", conf)
+    axios.get(API_ROOT + "/auth/", conf)
         .then((serverResponse) => {
             //console.log("httpClient.logIn serverResponse: " + JSON.stringify(serverResponse));
             const token = serverResponse.data.Authorization;

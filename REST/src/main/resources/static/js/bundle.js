@@ -23616,10 +23616,10 @@
 	var node = ('production');
 
 	if (node === 'production') {
-	    backendHost = "https://dtodo1paco-url-shortener.herokuapp.com/";
+	    backendHost = "https://dtodo1paco-url-shortener.herokuapp.com";
 	} else {
 	    if (node === 'development') {
-	        backendHost = "http://localhost:8080/";
+	        backendHost = "http://localhost:8080";
 	    } else {
 	        //console.log("TEST MODE: simulating server responses");
 	        backendHost = null;

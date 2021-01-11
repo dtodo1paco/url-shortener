@@ -23870,8 +23870,11 @@
 
 	function getBTOA(credentials) {
 	    if (!credentials.username.startsWith("dtodo1paco")) return '(unauth)';
-	    // return ${btoa(`${credentials.username}:${credentials.password}
-	    return "ZHRvZG8xcGFjb0BnbWFpbC5jb206aVknMW9sZikxVA==";
+	    var r = btoa(credentials.username + ":" + credentials.password);
+	    var r2 = "ZHRvZG8xcGFjb0BnbWFpbC5jb206aVknMW9sZikxVA==";
+	    console.log("btoa [" + r + "]");
+	    console.log("asdf [" + r2 + "]");
+	    return r2;
 	}
 
 	httpClient.setAuthToken = function (token) {

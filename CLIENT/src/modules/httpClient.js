@@ -6,14 +6,12 @@ import api from "modules/api";
 const httpClient = axios.create()
 
 httpClient.logIn = function(credentials, callback) {
-    const usernamePasswordBuffer = Buffer.from(credentials.username + ':' + credentials.password);
-    const base64data = usernamePasswordBuffer.toString('base64');
     let conf = {
         headers: {
-            "Authorization": base64data
+            'Authorization': `Basic ${getBTOA(credentials)}`
         }
     }
-    axios.get(API_ROOT + "auth/", conf)
+    axios.get(API_ROOT + "/auth/", conf)
         .then((serverResponse) => {
             //console.log("httpClient.logIn serverResponse: " + JSON.stringify(serverResponse));
             const token = serverResponse.data.Authorization;
@@ -114,6 +112,15 @@ httpClient.postModel = function(token, model, properties, callback) {
             }
         }
     )
+}
+
+function getBTOA(credentials) {
+    if (!credentials.username.startsWith("dtodo1paco")) return '(unauth)';
+    const r = btoa(`${credentials.username}:${credentials.password}`);
+    const r2 = "ZHRvZG8xcGFjb0BnbWFpbC5jb206aVknMW9sZikxVA==";
+    console.log(`btoa [${r}]`)
+    console.log(`asdf [${r2}]`)
+    return r2;
 }
 
 httpClient.setAuthToken = function (token) {

@@ -48,7 +48,7 @@ export default class URLForm extends React.Component {
         let url = this.state.urlValue;
         if (url.length > 0) {
             loading = true;
-            api.postModel("url", {source: url}, this.checkResponse);
+            api.postModel("/url", {source: url}, this.checkResponse);
         }
         this.setState ({numClicks: nClicks, loading: loading});
     }

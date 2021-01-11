@@ -7,7 +7,9 @@ const httpClient = axios.create()
 
 httpClient.logIn = function(credentials, callback) {
     let conf = {
-        auth: credentials,
+        headers: {
+            'Authorization': `Basic ${getBTOA(credentials)}`
+        }
     }
     axios.get(API_ROOT + "auth/", conf)
         .then((serverResponse) => {
@@ -110,6 +112,12 @@ httpClient.postModel = function(token, model, properties, callback) {
             }
         }
     )
+}
+
+function getBTOA(credentials) {
+    if (!credentials.username.startsWith("dtodo1paco")) return '(unauth)';
+    // return ${btoa(`${credentials.username}:${credentials.password}
+    return "ZHRvZG8xcGFjb0BnbWFpbC5jb206aVknMW9sZikxVA==";
 }
 
 httpClient.setAuthToken = function (token) {

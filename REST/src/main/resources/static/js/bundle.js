@@ -25791,7 +25791,7 @@
 	            var url = this.state.urlValue;
 	            if (url.length > 0) {
 	                loading = true;
-	                _api2.default.postModel("url", { source: url }, this.checkResponse);
+	                _api2.default.postModel("/url", { source: url }, this.checkResponse);
 	            }
 	            this.setState({ numClicks: nClicks, loading: loading });
 	        }
